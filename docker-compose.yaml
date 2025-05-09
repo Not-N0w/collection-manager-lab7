@@ -1,0 +1,33 @@
+services:
+  client:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.client
+    container_name: client-container
+    stdin_open: true
+    tty: true
+    environment:
+      - TO_HOST=server
+      - TO_PORT=1804
+    depends_on:
+      server:
+        condition: service_healthy
+
+  server:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.server
+    container_name: server-container
+    ports:
+      - "1804:1804"
+    healthcheck:
+      test: [ "CMD", "pgrep", "java" ]
+      interval: 10s
+      retries: 3
+    tty: true
+    volumes:
+      - saved_data:/server/saved_dir
+
+volumes:
+  saved_data:
+

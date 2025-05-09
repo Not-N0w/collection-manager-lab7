@@ -1,0 +1,5 @@
+FROM eclipse-temurin:17-jdk
+
+WORKDIR /client
+COPY client/build/libs/client.jar client.jar
+ENTRYPOINT ["java", "-jar", "client.jar"]
