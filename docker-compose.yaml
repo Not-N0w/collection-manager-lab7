@@ -28,6 +28,17 @@ services:
     volumes:
       - saved_data:/server/saved_dir
 
+  postgres:
+    image: postgres
+    environment:
+      POSTGRES_DB: "ticketControllerDB"
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "postgres"
+    volumes:
+    -   ./docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
+    ports:
+      - "5432:5432"
+
 volumes:
   saved_data:
 

@@ -1,6 +1,8 @@
 package com.labs.server;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
@@ -14,13 +16,13 @@ public class CollectionManager {
     /**
      * Коллекция
      */
-    private TreeSet<Ticket> treeSet;
+    private static SortedSet<Ticket> treeSet; // already sync
 
     /**
      * Конструктор - создание нового объекта
      */
     public CollectionManager() {
-        treeSet = new TreeSet<>();
+         treeSet = Collections.synchronizedSortedSet(new TreeSet<>());
     }
 
     /**

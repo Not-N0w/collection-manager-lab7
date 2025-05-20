@@ -17,31 +17,13 @@ public class TicketController {
      * Вызыватель команды
      */
     private Invoker invoker;
-    private FileManager fileManager;
     /**
      * Конструктор - создание нового объекта.
      */
     public TicketController() {
-        fileManager = new FileManager("/server/saved_dir/saved");
         invoker = new Invoker();
     }
 
-    public void loadTickets() {
-        DataContainer dataContainer = new DataContainer();
-        dataContainer.setCommad("add");
-        dataContainer.add("tickets", fileManager.getTickets());
-        invoker.run(dataContainer);
-    }
-    public void saveTickets() {
-        invoker.run(new DataContainer("show"));
-        ArrayList<Ticket> resp = (ArrayList<Ticket>) invoker.getResponse().get("data");
-        fileManager.saveTickets(resp);
-    }
-    /**
-     * Обработка данных
-     * 
-     * @param inData данные с клиента в байтовом представлении
-     */
     public byte[] process(byte[] inData) {
         DataContainer data = null;
         DataContainer commandResponse = new DataContainer();
