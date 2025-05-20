@@ -2,6 +2,7 @@ package com.labs.client;
 
 import com.labs.client.extra.Pair;
 import com.labs.common.DataContainer;
+import com.labs.common.user.User;
 
 /**
  * Класс - обработчик данных. Организует отправку запросов и получение ответов с
@@ -82,4 +83,6 @@ public class DataManager {
         if(isSilent) return;
         output.responseOut(response);
     }
+
+
 }

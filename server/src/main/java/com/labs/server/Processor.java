@@ -22,11 +22,7 @@ public class Processor implements Runnable {
     public void run() {
         logger.info("Starting processing data");
         var response = ticketController.process(request);
-        try {
-            Thread.sleep(5000);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
+
         logger.info("Data processing completed");
         cashedSendPool.submit(new Sender(response, clientSocket));
     }

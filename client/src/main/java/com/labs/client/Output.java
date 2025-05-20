@@ -187,7 +187,13 @@ public class Output {
         if (response.get("data") == null) return;
         processData(response);
     }
-
+    public void outDelimetr() {
+        out("-".repeat(50) + '\n');
+    }
+    public void outHeadDelimetr(String header) {
+        String result = "-- " + header + " " + "-".repeat(46 - lengthWithoutColor - header.length()) + '\n';
+        out(result);
+    }
     public static String getColoredString(String in, String color) {
         return colors.get(color) + in + ANSI_RESET;
     }

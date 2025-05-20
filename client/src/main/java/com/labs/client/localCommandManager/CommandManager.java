@@ -2,6 +2,7 @@ package com.labs.client.localCommandManager;
 
 import com.labs.client.Cycle;
 import com.labs.client.DataManager;
+import com.labs.client.UserManager;
 import com.labs.common.DataContainer;
 
 /**
@@ -17,8 +18,8 @@ public class CommandManager {
      * @param cycle       цикл, в котором сейчас находится программа
      * @param dataManager класс обработки данных
      */
-    public CommandManager(Cycle cycle, DataManager dataManager) {
-        invoker = new Invoker(cycle, dataManager);
+    public CommandManager(Cycle cycle, DataManager dataManager, UserManager userManager) {
+        invoker = new Invoker(cycle, dataManager, userManager);
     }
 
     /**

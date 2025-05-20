@@ -24,12 +24,15 @@ public class Transmitter {
 
 
     public DataContainer connectionCheck() {
+        DataContainer response = new DataContainer();
         if (socket == null || !socket.isConnected()) {
-            var response = connect();
+            response = connect();
             response.add("message", "Reconnection: " + response.get("message"));
             return response;
         }
-        return null;
+        response.add("status", "ok");
+        response.add("message", "Already connected to server");
+        return response;
     }
 
     public DataContainer connect() {

@@ -28,7 +28,7 @@ public class Cycle {
      * Поле с классом, отвечающим за обработку данных. 
     */
     private DataManager dataManager;
-
+    private UserManager userManager;
     /** 
      * Флаг, указывающий на необходимость выхода из цикла 
     */
@@ -41,12 +41,13 @@ public class Cycle {
      * @param output      класс вывода данных
      * @param dataManager класс обработки данных
      */
-    public Cycle(Input input, Output output, DataManager dataManager, boolean isScilent) {
-        localCommandManager = new CommandManager(this, dataManager);
+    public Cycle(Input input, Output output, DataManager dataManager, boolean isScilent, UserManager userManager) {
+        localCommandManager = new CommandManager(this, dataManager, userManager);
         this.input = input;
         this.output = output;
         this.dataManager = dataManager;
         this.isSilent = isScilent;
+        this.userManager = userManager;
     }
 
     /**
@@ -111,5 +112,7 @@ public class Cycle {
     public Output output() {
         return this.output;
     }
-
+    public UserManager userManager() {
+        return userManager;
+    }
 }

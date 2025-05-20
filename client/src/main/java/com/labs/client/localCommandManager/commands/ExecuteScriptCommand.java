@@ -40,7 +40,7 @@ public class ExecuteScriptCommand implements Command {
         boolean isSilent = false;
         if(param != null && param.equals("s")) isSilent = true;
 
-        Cycle fileCycle = new Cycle(input, cycle.output(), cycle.dataManager(), isSilent);
+        Cycle fileCycle = new Cycle(input, cycle.output(), cycle.dataManager(), isSilent, cycle.userManager());
         fileCycle.output().noComments();
         fileCycle.input().noComments();
 

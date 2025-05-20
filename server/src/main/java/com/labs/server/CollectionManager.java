@@ -17,12 +17,11 @@ public class CollectionManager {
      * Коллекция
      */
     private static SortedSet<Ticket> treeSet; // already sync
-
     /**
      * Конструктор - создание нового объекта
      */
     public CollectionManager() {
-         treeSet = Collections.synchronizedSortedSet(new TreeSet<>());
+        treeSet = Collections.synchronizedSortedSet(new TreeSet<>());
     }
 
     /**
@@ -31,6 +30,7 @@ public class CollectionManager {
      * @param ticket этот объект нужно добавить в колекцию
      */
     public void add(Ticket ticket) {
+
         treeSet.add(ticket);
     }
 

@@ -6,6 +6,7 @@ import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 import com.labs.common.DataContainer;
+import com.labs.common.user.User;
 
 /**
  * Класс, реализующий получение пользовательских данных и их первичной обработки
@@ -25,7 +26,6 @@ public class Input {
      * Поле с классом, отвечающим за вывод данных.
     */
     private Output output;
-
     /**
      * Конструктор создание нового объекта.
      * 
@@ -143,4 +143,23 @@ public class Input {
         return null;
     }
 
+    public User autorizeUser() {
+        output.outHeadDelimetr("Autorization");
+        output.out("Login -> ");
+        String login = scanner.next();
+        output.out("Password -> ");
+        String password = scanner.next();
+        output.outDelimetr();
+        User user = new User(login, password);
+
+        return user;
+    }
+
+    public boolean wantNewUser() {
+        output.outHeadDelimetr("No such user\n");
+        output.out("Do you want to add new user? (Y/N) -> ");
+        String addUser = scanner.next();
+        if (addUser.charAt(0) == 'Y') { return true; }
+        return false;
+    }
 }

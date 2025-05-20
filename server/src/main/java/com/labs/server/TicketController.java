@@ -1,10 +1,11 @@
 package com.labs.server;
 
 import java.io.IOException;
-import java.util.ArrayList;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 
 import com.labs.common.DataContainer;
-import com.labs.common.core.Ticket;
 import com.labs.common.dataConverter.Deserializer;
 import com.labs.common.dataConverter.Serializer;
 
@@ -17,12 +18,16 @@ public class TicketController {
      * Вызыватель команды
      */
     private Invoker invoker;
+
+    private DBManager dbManager;
     /**
      * Конструктор - создание нового объекта.
      */
     public TicketController() {
+        dbManager = new DBManager();
         invoker = new Invoker();
     }
+
 
     public byte[] process(byte[] inData) {
         DataContainer data = null;
@@ -43,8 +48,15 @@ public class TicketController {
             skipExecution = true;
         }
         if(!skipExecution) {
-            invoker.run(data);
-            commandResponse = invoker.getResponse();
+            dbManager.connect();
+            if(data.get("type").equals("command-execution")) {
+                invoker.run(data);
+                commandResponse = invoker.getResponse();
+            }
+            else {
+                commandResponse = dbManager.processDBRequest(data);
+            }
+            dbManager.disconnect();
         }
 
         byte[] outData;
