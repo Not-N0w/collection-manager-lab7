@@ -54,6 +54,7 @@ public class DBQuery {
                 if (i != conditions.size() - 1) result += " AND ";
             }
         }
+        result += " " + more;
         return result;
 
 

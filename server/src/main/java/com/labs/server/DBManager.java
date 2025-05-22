@@ -196,7 +196,14 @@ public class DBManager {
         try {
             dbConnection.setAutoCommit(false);
 
-            String locationQuery = "INSERT INTO locations (x, y, z) VALUES (?, ?, ?) RETURNING id";
+            WhereQuery val1 = new WhereQuery("?");
+
+            DBQuery dbQuery = new DBQuery(QueryType.INSERT,
+                    "locations", List.of(), List.of(val1, val1, val1),
+                    "x", "y", "z");
+            dbQuery.setMore("RETURNING id");
+
+            String locationQuery = dbQuery.toString();
             PreparedStatement locationStmt = dbConnection.prepareStatement(locationQuery);
             locationStmt.setFloat(1, ticket.person().getLocation().getX());
             locationStmt.setFloat(2, ticket.person().getLocation().getY());
@@ -205,7 +212,13 @@ public class DBManager {
             locationRs.next();
             int locationId = locationRs.getInt(1);
 
-            String personQuery = "INSERT INTO persons (birthday, weight, passport_id, location_id) VALUES (?, ?, ?, ?) RETURNING id";
+
+            DBQuery dbPersonQuery = new DBQuery(QueryType.INSERT,
+                    "persons", List.of(), List.of(val1, val1, val1, val1),
+                    "birthday", "weigth", "passport_id", "location_id");
+            dbQuery.setMore("RETURNING id");
+
+            String personQuery = dbPersonQuery.toString();
             PreparedStatement personStmt = dbConnection.prepareStatement(personQuery);
             personStmt.setDate(1, java.sql.Date.valueOf(ticket.person().getBirthday()));
             personStmt.setDouble(2, ticket.person().getWeight());
@@ -215,7 +228,12 @@ public class DBManager {
             personRs.next();
             int personId = personRs.getInt(1);
 
-            String coordinatesQuery = "INSERT INTO coordinates (x, y) VALUES (?, ?) RETURNING id";
+            DBQuery dbCoordinatesQuery = new DBQuery(QueryType.INSERT,
+                    "coordinates", List.of(), List.of(val1, val1),
+                    "x", "y");
+            dbQuery.setMore("RETURNING id");
+
+            String coordinatesQuery = dbCoordinatesQuery.toString();
             PreparedStatement coordStmt = dbConnection.prepareStatement(coordinatesQuery);
             coordStmt.setInt(1, ticket.coordinates().getX());
             coordStmt.setFloat(2, ticket.coordinates().getY());
@@ -223,9 +241,12 @@ public class DBManager {
             coordRs.next();
             int coordinatesId = coordRs.getInt(1);
 
-            String ticketQuery = "INSERT INTO tickets " +
-                    "(name, coordinates_id, price, refundable, type, person_id, user_id) " +
-                    "VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING id";
+            DBQuery dbTicketQuery = new DBQuery(QueryType.INSERT,
+                    "tickets", List.of(), List.of(val1, val1, val1, val1, val1, val1, val1),
+                    "name", "coordinates_id", "price", "refundable", "type", "person_id", "user_id");
+            dbQuery.setMore("RETURNING id");
+
+            String ticketQuery = dbTicketQuery.toString();
             PreparedStatement ticketStmt = dbConnection.prepareStatement(ticketQuery);
             ticketStmt.setString(1, ticket.name());
             ticketStmt.setInt(2, coordinatesId);
