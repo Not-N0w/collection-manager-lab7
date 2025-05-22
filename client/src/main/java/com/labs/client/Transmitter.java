@@ -3,6 +3,7 @@ package com.labs.client;
 import com.labs.common.DataContainer;
 import com.labs.common.dataConverter.Deserializer;
 import com.labs.common.dataConverter.Serializer;
+import com.labs.common.user.User;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -109,10 +110,16 @@ public class Transmitter {
         }
     }
 
-    public DataContainer send(DataContainer data) {
+    public DataContainer send(DataContainer data, User user) {
         DataContainer response = new DataContainer();
         response.add("from", "CLIENT");
 
+        if(data.get("type").equals("verify-user") || data.get("type").equals("user-add")) {
+            data.add("User", user);
+        }
+        else {
+            data.add("User-id", user.getId());
+        }
         byte[] bytes;
         try {
             bytes = serializer.serialize(data);

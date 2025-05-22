@@ -3,6 +3,7 @@ package com.labs.client.localCommandManager.commands;
 import com.labs.client.DataManager;
 import com.labs.client.UserManager;
 import com.labs.common.Command;
+import com.labs.common.DataContainer;
 
 public class UserInfoCommand implements Command {
 
@@ -12,7 +13,11 @@ public class UserInfoCommand implements Command {
         this.userManager = userManager;
     }
 
-    public Object execute() {
-        return userManager.getUser().toString();
+    public DataContainer execute() {
+        DataContainer dataContainer = new DataContainer();
+        dataContainer.add("status", "ok");
+        dataContainer.add("message", "User info command executed successfully");
+        dataContainer.add("return-data", userManager.getUser().toString());
+        return dataContainer;
     }
 }

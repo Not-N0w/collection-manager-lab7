@@ -19,7 +19,7 @@ CREATE TABLE coordinates (
 
 CREATE TABLE users (
                        id SERIAL PRIMARY KEY,
-                       login VARCHAR(30) NOT NULL CHECK (login <> ''),
+                       login VARCHAR(30) NOT NULL UNIQUE CHECK (login <> ''),
                        password_hash TEXT NOT NULL CHECK (password_hash <> ''),
                        status Status NOT NULL DEFAULT 'simple'
 );
@@ -27,7 +27,7 @@ CREATE TABLE users (
 CREATE TABLE persons (
                          id SERIAL PRIMARY KEY,
                          birthday DATE NOT NULL,
-                         weight INTEGER NOT NULL CHECK (weight > 0),
+                         weight DOUBLE PRECISION NOT NULL CHECK (weight > 0),
                          passport_id VARCHAR(30) NOT NULL CHECK (passport_id <> ''),
                          location_id INTEGER NOT NULL,
                          FOREIGN KEY (location_id) REFERENCES locations(id)

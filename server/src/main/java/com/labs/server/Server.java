@@ -17,7 +17,8 @@ public class Server {
     }
 
     public void start() {
-        //logger.info("Tickets loaded");
+        ticketController.loadTickets();
+
         try {
             connectionHandler.start();
         } catch (Exception e) {

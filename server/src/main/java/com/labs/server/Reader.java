@@ -58,11 +58,11 @@ public class Reader implements Runnable {
                 }
 
                 logger.info("Server recieved object");
-                fixedProcessPool.submit(new Processor(buffer, clientSocket, cashedSendPool));
+                fixedProcessPool.execute(new Processor(buffer, clientSocket, cashedSendPool));
             }
         }
         catch (IOException e) {
-            // sth w wrong with input stre
+            throw new RuntimeException(e);
         }
     }
 

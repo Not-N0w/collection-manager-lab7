@@ -8,5 +8,5 @@ public interface Executable {
      * Исполняет объект
      * @return ответ исполнения (null если ответ не предполагается)
      */
-    public Object execute();
+    public DataContainer execute();
 }

@@ -143,7 +143,9 @@ public class Output {
     }
 
     private void processData(DataContainer response) {
-        Object responseData = response.get("data");
+        DataContainer cmResponse = response.get("data");
+        Object responseData = cmResponse.get("return-data");
+
 
         String content = "";
         if (responseData instanceof ArrayList<?>) {
@@ -162,10 +164,17 @@ public class Output {
             String text = (String) responseData;
             content = text;
         }
-
+        if(content != null && !content.equals("")) {
             String command = response.getCommand();
             lengthWithoutColor = command.length() + 10;
             out(makeBlock(content, ANSI_PURPLE + response.getCommand() + " -> " + "OUTPUT" + ANSI_RESET));
+        }
+
+        String message = cmResponse.get("message");
+        if(message != null) {
+            lengthWithoutColor = 16 + response.getCommand().length();
+            out(makeBlock(message, ANSI_BLUE + response.getCommand()  +"(info) -> " + "OUTPUT" + ANSI_RESET));
+        }
 
     }
     /**
@@ -174,6 +183,10 @@ public class Output {
      * @param response ответ с сервера
      * @see DataContainer
      */
+
+    public void outOk(String message) {
+        out(makeOk(message));
+    }
     public void responseOut(DataContainer response) {
         if (response == null)
             return;
@@ -181,7 +194,7 @@ public class Output {
             out(makeError((String) response.get("message")));
         }
         else if (response.get("status").equals("ok")) {
-            out(makeOk((String) response.get("message")));
+            outOk((String) response.get("message"));
         }
 
         if (response.get("data") == null) return;
@@ -199,13 +212,3 @@ public class Output {
     }
 }
 
-
-/*
-*
-* DC :
-* server_command_response
-*
-*
-*
-*
-* */

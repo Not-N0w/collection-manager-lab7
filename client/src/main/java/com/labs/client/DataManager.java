@@ -15,6 +15,7 @@ public class DataManager {
     */
     private Output output;
     private Transmitter transmitter;
+    private boolean noComments = false;
     /**
      * Конструктор - создание нового объекта.
      * 
@@ -24,6 +25,7 @@ public class DataManager {
         this.output = output;
         this.transmitter = transmitter;
     }
+    public void nextSilent() { noComments = true; }
     public String connInfo() {
         return transmitter.connInfo();
     }
@@ -35,30 +37,26 @@ public class DataManager {
      *         случае.
      * @see DataContainer
      */
-    public boolean send(DataContainer commandData) {
+    public boolean send(DataContainer commandData, User user) {
         var connCheck = transmitter.connectionCheck();
-        if(connCheck != null) {
-            output.responseOut(connCheck);
-        }
-        DataContainer response = transmitter.send(commandData);
-        output.responseOut(response);
+        DataContainer response = transmitter.send(commandData, user);
+        if(!noComments) { output.responseOut(response); }
+        noComments = false;
         if(response.get("status").equals("error")) return false;
         return true;
     }
 
     /**
      * @param command комманда (без данных)
-     * @param pairs   данные команды представленные в виде пар
-     * @return результат метода {@link DataManager#send(DataContainer)}
      * @see Pair
      * @see DataContainer
      */
-    public boolean sendCommand(String command, @SuppressWarnings("unchecked") Pair<String, Object>... pairs) {
+    public boolean sendCommand(String command, User user, @SuppressWarnings("unchecked") Pair<String, Object>... pairs) {
         DataContainer dataContainer = new DataContainer(command);
         for (var item : pairs) {
             dataContainer.add(item.key(), item.value());
         }
-        return send(dataContainer);
+        return send(dataContainer, user);
     }
 
     /**

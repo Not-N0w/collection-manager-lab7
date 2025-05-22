@@ -24,6 +24,6 @@ public class Processor implements Runnable {
         var response = ticketController.process(request);
 
         logger.info("Data processing completed");
-        cashedSendPool.submit(new Sender(response, clientSocket));
+        cashedSendPool.execute(new Sender(response, clientSocket));
     }
 }

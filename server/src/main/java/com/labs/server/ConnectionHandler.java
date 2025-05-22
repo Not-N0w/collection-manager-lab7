@@ -39,9 +39,8 @@ public class ConnectionHandler {
         while (running) {
             try  {
                 Socket clientSocket = serverSocket.accept();
-
                 Reader reader = new Reader(clientSocket, cashedSendPool, fixedProcessPool);
-                cashedReadPool.submit(reader);
+                cashedReadPool.execute(reader);
             } catch (IOException e) {
                 logger.error("Client accepting failed");
             }

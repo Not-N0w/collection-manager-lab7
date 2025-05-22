@@ -7,6 +7,7 @@ import java.util.Scanner;
 
 import com.labs.common.DataContainer;
 import com.labs.common.user.User;
+import com.labs.common.SHAConverter;
 
 /**
  * Класс, реализующий получение пользовательских данных и их первичной обработки
@@ -47,7 +48,6 @@ public class Input {
      */
     public Input(Output output, String filePath) {
         this.output = output;
-        this.output = output;
         scannerInit(filePath);
         commandDataParser = new CommandDataParser(scanner, output);
     }
@@ -60,7 +60,10 @@ public class Input {
     public boolean checkScanner() {
         return (scanner == null ? false : true);
     }
-
+    public static boolean checkSource(String filePath) {
+        var file =  new File(filePath.strip());
+        return file.exists();
+    }
     /**
      * Метод пытающийся инициализировать сканнер
      * 
@@ -150,13 +153,12 @@ public class Input {
         output.out("Password -> ");
         String password = scanner.next();
         output.outDelimetr();
-        User user = new User(login, password);
 
-        return user;
+        return new User(login, password);
     }
 
     public boolean wantNewUser() {
-        output.outHeadDelimetr("No such user\n");
+        output.out("No such user\n");
         output.out("Do you want to add new user? (Y/N) -> ");
         String addUser = scanner.next();
         if (addUser.charAt(0) == 'Y') { return true; }

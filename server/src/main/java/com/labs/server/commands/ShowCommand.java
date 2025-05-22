@@ -1,6 +1,7 @@
 package com.labs.server.commands;
 
 import com.labs.common.Command;
+import com.labs.common.DataContainer;
 import com.labs.common.core.Ticket;
 import com.labs.server.CollectionManager;
 
@@ -14,7 +15,7 @@ public class ShowCommand implements Command {
         this.collectionManager = collectionManager;
     }
 
-    public Object execute() {
-        return collectionManager.getAll().stream().sorted(Comparator.comparing(Ticket::name)).collect(Collectors.toList());
+    public DataContainer execute() {
+        return collectionManager.getAll();
     }
 }

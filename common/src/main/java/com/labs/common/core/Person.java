@@ -1,6 +1,7 @@
 package com.labs.common.core;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 
 import com.labs.client.ValueChecker;
 
@@ -18,6 +19,26 @@ public class Person implements Serializable, Settable,  Comparable<Person> {
     private double weight; // Значение поля должно быть больше 0
     private String passportID; // Строка не может быть пустой, Поле может быть null
     private Location location; // Поле может быть null
+
+    public double getWeightLimit() {
+        return weightLimit;
+    }
+
+    public LocalDate getBirthday() {
+        return birthday;
+    }
+
+    public double getWeight() {
+        return weight;
+    }
+
+    public String getPassportID() {
+        return passportID;
+    }
+
+    public Location getLocation() {
+        return location;
+    }
 
     /**
      * Конструктор - создание кового объекта с заданными параметрами birthday,

@@ -25,9 +25,12 @@ public class TicketController {
      */
     public TicketController() {
         dbManager = new DBManager();
-        invoker = new Invoker();
+        invoker = new Invoker(dbManager);
     }
 
+    public void loadTickets() {
+        CollectionManager.sync();
+    }
 
     public byte[] process(byte[] inData) {
         DataContainer data = null;
@@ -50,6 +53,7 @@ public class TicketController {
         if(!skipExecution) {
             dbManager.connect();
             if(data.get("type").equals("command-execution")) {
+                dbManager.setUserId(data.get("User-id"));
                 invoker.run(data);
                 commandResponse = invoker.getResponse();
             }

@@ -84,8 +84,8 @@ public class Cycle {
                 }
                 continue;
             }
-
-            if(!dataManager.send(commandData)) continue;
+            commandData.add("User-id", userManager.getUser().getId());
+            if(!dataManager.send(commandData, userManager.getUser())) continue;
 
             dataManager.processResponse(isSilent);
 

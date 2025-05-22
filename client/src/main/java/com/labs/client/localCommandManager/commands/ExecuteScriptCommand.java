@@ -4,6 +4,7 @@ import java.util.Map;
 import com.labs.client.Cycle;
 import com.labs.client.Input;
 import com.labs.common.Command;
+import com.labs.common.DataContainer;
 import com.labs.common.exceptions.KeyNotFoundException;
 
 /**
@@ -33,10 +34,23 @@ public class ExecuteScriptCommand implements Command {
      * Метод, исполняющий команду execute_script. Создает новый {@link Cycle} с
      * новым {@link Input} из файла, запрещает комментарии и запускает этот цикл.
      */
-    public Object execute() {
+    public DataContainer execute() {
+        DataContainer dataContainer = new DataContainer();
+
+        if (!Input.checkSource(filePath)) {
+            dataContainer.add("status", "error");
+            dataContainer.add("message", "Source is incorrect");
+            return dataContainer;
+        }
+
         Input input = new Input(cycle.output(), filePath);
-        if (!input.checkScanner())
-            return null;
+
+        if (!input.checkScanner()) {
+            dataContainer.add("status", "error");
+            dataContainer.add("message", "Scanner dead");
+            return dataContainer;
+        }
+
         boolean isSilent = false;
         if(param != null && param.equals("s")) isSilent = true;
 
@@ -48,7 +62,9 @@ public class ExecuteScriptCommand implements Command {
 
         fileCycle.output().allowComments();
         fileCycle.input().allowComments();
-        return null;
+        dataContainer.add("status", "ok");
+        dataContainer.add("message", "Script executed successfully");
+        return dataContainer;
     }
 
     /**

@@ -3,6 +3,7 @@ package com.labs.client.localCommandManager.commands;
 import com.labs.client.Cycle;
 import com.labs.common.Command;
 import com.labs.client.DataManager;
+import com.labs.common.DataContainer;
 
 
 public class ConnInfoCommand implements Command {
@@ -13,7 +14,10 @@ public class ConnInfoCommand implements Command {
         this.dataManager = dataManager;
     }
 
-    public Object execute() {
-        return dataManager.connInfo();
+    public DataContainer execute() {
+        DataContainer dataContainer = new DataContainer();
+        dataContainer.add("status", "ok");
+        dataContainer.add("return-data", dataManager.connInfo());
+        return dataContainer;
     }
 }

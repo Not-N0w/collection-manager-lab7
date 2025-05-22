@@ -13,6 +13,18 @@ public class Location implements Serializable, Settable, Comparable<Location> {
     private Float y; // Поле не может быть null
     private Long z; // Поле не может быть null
 
+    public Float getX() {
+        return x;
+    }
+
+    public Float getY() {
+        return y;
+    }
+
+    public Long getZ() {
+        return z;
+    }
+
     /**
      * Конструктор - создание нового объекта c заданными X, Y и Z.
      * 

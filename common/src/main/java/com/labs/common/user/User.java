@@ -14,7 +14,6 @@ public class User implements Serializable {
         return "User{" +
                 "isVerified=" + isVerified +
                 ", status=" + status +
-                ", passwordHash='" + passwordHash + '\'' +
                 ", login='" + login + '\'' +
                 ", id=" + id +
                 '}';

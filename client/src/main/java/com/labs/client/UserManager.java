@@ -4,6 +4,10 @@ import com.labs.common.DataContainer;
 import com.labs.common.dataConverter.Serializer;
 import com.labs.common.user.User;
 
+import java.math.BigInteger;
+import java.security.NoSuchAlgorithmException;
+import java.security.Security;
+
 public class UserManager {
     private DataManager dataManager;
     private Input input;
@@ -18,33 +22,40 @@ public class UserManager {
         this.output = output;
     }
 
+
     public User getUser() {
         return user;
     }
     public User verifyUser(User user) {
         DataContainer autorizeRequest = new DataContainer();
-        autorizeRequest.add("User", user);
         autorizeRequest.add("type", "verify-user");
-        dataManager.send(autorizeRequest);
+        dataManager.nextSilent();
+        dataManager.send(autorizeRequest, user);
         DataContainer response = dataManager.getResponse();
-
+        var userOut = (User)response.get("User");
         if(response.get("status").equals("error")) {
             output.responseOut(response);
             return null;
+        }
+        else if(userOut.isVerified()) {
+            output.outOk("Login successful");
         }
         return response.get("User");
     }
 
     public User addUser(User user) {
         DataContainer autorizeRequest = new DataContainer();
-        autorizeRequest.add("User", user);
         autorizeRequest.add("type", "user-add");
-        if(!dataManager.send(autorizeRequest)) return null;
+        if(!dataManager.send(autorizeRequest, user)) return null;
         DataContainer response = dataManager.getResponse();
 
+        var userOut = (User)response.get("User");
         if(response.get("status").equals("error")) {
             output.responseOut(response);
             return null;
+        }
+        else if(userOut.isVerified()) {
+            output.outOk("Login successful");
         }
         return response.get("User");
     }
@@ -70,6 +81,9 @@ public class UserManager {
                     authenticateUser();
                     return;
                 }
+            }
+            else {
+                authenticateUser();
             }
         }
         this.user = newUser;

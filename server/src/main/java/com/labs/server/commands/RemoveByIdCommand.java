@@ -3,6 +3,7 @@ package com.labs.server.commands;
 import java.util.Map;
 
 import com.labs.common.Command;
+import com.labs.common.DataContainer;
 import com.labs.common.exceptions.KeyNotFoundException;
 import com.labs.server.CollectionManager;
 
@@ -14,9 +15,8 @@ public class RemoveByIdCommand implements Command {
         this.collectionManager = collectionManager;
     }
 
-    public Object execute() {
-        collectionManager.removeById(id);
-        return null;
+    public DataContainer execute() {
+        return collectionManager.removeById(id);
     }
 
     public void setArguments(Map<String, Object> data) throws KeyNotFoundException {

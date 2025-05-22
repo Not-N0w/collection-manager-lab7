@@ -2,6 +2,7 @@ package com.labs.client.localCommandManager.commands;
 
 import com.labs.client.Cycle;
 import com.labs.common.Command;
+import com.labs.common.DataContainer;
 
 
 /**
@@ -25,8 +26,11 @@ public class ExitCommand implements Command {
     /**
      * Метод, исполняющий команду exit, вызывая {@link Cycle#leave()}.
      */
-    public Object execute() {
+    public DataContainer execute() {
+        DataContainer dataContainer = new DataContainer();
         cycle.leave();
-        return null;
+        dataContainer.add("status", "ok");
+        dataContainer.add("message", "Exited");
+        return dataContainer;
     }
 }
