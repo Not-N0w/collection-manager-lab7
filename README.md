@@ -1,7 +1,6 @@
 # Lab Work №7
 
 **Variant:** 5527  
-**Author:** Yaroslav Makogon
 
 ## Description
 
