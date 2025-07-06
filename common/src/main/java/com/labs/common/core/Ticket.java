@@ -19,6 +19,46 @@ public final class Ticket implements Serializable, Comparable<Ticket>, Settable 
      */
     private final int priceLimit = 0;
 
+    public static Long getNextID() {
+        return nextID;
+    }
+
+    public int getPriceLimit() {
+        return priceLimit;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public Coordinates getCoordinates() {
+        return coordinates;
+    }
+
+    public LocalDateTime getCreationDate() {
+        return creationDate;
+    }
+
+    public int getPrice() {
+        return price;
+    }
+
+    public Boolean getRefundable() {
+        return refundable;
+    }
+
+    public TicketType getType() {
+        return type;
+    }
+
+    public Person getPerson() {
+        return person;
+    }
+
     private Long id; // Поле не может быть null, Значение поля должно быть больше 0, Значение этого
                      // поля должно быть уникальным, Значение этого поля должно генерироваться
                      // автоматически
@@ -30,6 +70,15 @@ public final class Ticket implements Serializable, Comparable<Ticket>, Settable 
     private Boolean refundable; // Поле не может быть null
     private TicketType type; // Поле не может быть null
     private Person person; // Поле может быть null
+    private Long ownerId;
+
+    public Long getOwnerId() {
+        return ownerId;
+    }
+
+    public void setOwnerId(Long ownerId) {
+        this.ownerId = ownerId;
+    }
 
     /**
      * Конструктор - создание нового объекта с определенными полями name,
@@ -157,11 +206,6 @@ public final class Ticket implements Serializable, Comparable<Ticket>, Settable 
         this.coordinates = coordinates;
     }
 
-    /**
-     * Устанавливает цену объекта {@link Ticket}
-     * 
-     * @param id значение цены
-     */
     public void setPrice(Integer price) {
         ValueChecker.checkLimits(price, priceLimit, null, "Price");
         this.price = price;
@@ -199,13 +243,7 @@ public final class Ticket implements Serializable, Comparable<Ticket>, Settable 
         this.person = person;
     }
 
-    /**
-     * Отображает вложенный объект {@link obj} с пробелами в начале
-     * 
-     * @param obj вложенный объект
-     * @return строку-отображение объекта {@link obj} с пробелами в начале каждой
-     *         новой строки.
-     */
+
     private String tab(Object obj) {
         String[] objStrings = obj.toString().split("\n");
         String result = "";
@@ -218,13 +256,14 @@ public final class Ticket implements Serializable, Comparable<Ticket>, Settable 
     @Override
     public String toString() {
         String result = "Ticket ->\n";
-        result += "    Name: " + name + "\n";
         result += "    ID: " + String.valueOf(id) + "\n";
-        result += tab(coordinates.toString());
         result += "    CreationDate: " + creationDate.toString() + "\n";
+        result += "    OwnerId: " + ownerId + "\n";
+        result += "    Name: " + name + "\n";
         result += "    Price: " + String.valueOf(price) + "\n";
         result += "    Refundable: " + String.valueOf(refundable) + "\n";
         result += "    TicketType: " + type.name() + "\n";
+        result += tab(coordinates.toString());
         result += tab(person.toString());
         return result;
     }

@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import com.labs.common.Command;
+import com.labs.common.DataContainer;
 import com.labs.common.core.Ticket;
 import com.labs.common.exceptions.KeyNotFoundException;
 import com.labs.server.CollectionManager;
@@ -17,11 +18,8 @@ public class FilterGreaterThanRefundableCommand implements Command {
         this.collectionManager = collectionManager;
     }
 
-    public Object execute() {
-        return collectionManager.getAll().stream()
-                .filter(ticket -> Boolean.compare(ticket.refundable(), refundable) > 0)
-                .sorted(Comparator.comparing(Ticket::name))
-                .collect(Collectors.toList());
+    public DataContainer execute() {
+        return collectionManager.filterGreaterThanRefundable(refundable);
     }
 
     public void setArguments(Map<String, Object> data) throws KeyNotFoundException {

@@ -1,10 +1,11 @@
 package com.labs.server;
 
 import java.io.IOException;
-import java.util.ArrayList;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 
 import com.labs.common.DataContainer;
-import com.labs.common.core.Ticket;
 import com.labs.common.dataConverter.Deserializer;
 import com.labs.common.dataConverter.Serializer;
 
@@ -17,31 +18,20 @@ public class TicketController {
      * Вызыватель команды
      */
     private Invoker invoker;
-    private FileManager fileManager;
+
+    private DBManager dbManager;
     /**
      * Конструктор - создание нового объекта.
      */
     public TicketController() {
-        fileManager = new FileManager("/server/saved_dir/saved");
-        invoker = new Invoker();
+        dbManager = new DBManager();
+        invoker = new Invoker(dbManager);
     }
 
     public void loadTickets() {
-        DataContainer dataContainer = new DataContainer();
-        dataContainer.setCommad("add");
-        dataContainer.add("tickets", fileManager.getTickets());
-        invoker.run(dataContainer);
+        CollectionManager.sync();
     }
-    public void saveTickets() {
-        invoker.run(new DataContainer("show"));
-        ArrayList<Ticket> resp = (ArrayList<Ticket>) invoker.getResponse().get("data");
-        fileManager.saveTickets(resp);
-    }
-    /**
-     * Обработка данных
-     * 
-     * @param inData данные с клиента в байтовом представлении
-     */
+
     public byte[] process(byte[] inData) {
         DataContainer data = null;
         DataContainer commandResponse = new DataContainer();
@@ -61,8 +51,16 @@ public class TicketController {
             skipExecution = true;
         }
         if(!skipExecution) {
-            invoker.run(data);
-            commandResponse = invoker.getResponse();
+            dbManager.connect();
+            if(data.get("type").equals("command-execution")) {
+                dbManager.setUserId(data.get("User-id"));
+                invoker.run(data);
+                commandResponse = invoker.getResponse();
+            }
+            else {
+                commandResponse = dbManager.processDBRequest(data);
+            }
+            dbManager.disconnect();
         }
 
         byte[] outData;

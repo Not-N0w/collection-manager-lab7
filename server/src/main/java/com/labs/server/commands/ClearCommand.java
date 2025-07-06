@@ -1,6 +1,7 @@
 package com.labs.server.commands;
 
 import com.labs.common.Command;
+import com.labs.common.DataContainer;
 import com.labs.server.CollectionManager;
 
 public class ClearCommand implements Command {
@@ -10,8 +11,7 @@ public class ClearCommand implements Command {
         this.collectionManager = collectionManager;
     }
 
-    public Object execute() {
-        collectionManager.clear();
-        return null;
+    public DataContainer execute() {
+        return collectionManager.clear();
     }
 }

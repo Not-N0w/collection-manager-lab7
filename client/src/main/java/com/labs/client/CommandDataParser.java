@@ -279,6 +279,7 @@ public class CommandDataParser {
 
         DataContainer result = new DataContainer();
         result.setCommad(command);
+        result.add("type", "command-execution");
         switch (command) {
             case "add", "add_if_max", "add_if_min":
                 ArrayList<Ticket> tickets = new ArrayList<Ticket>();
@@ -310,7 +311,7 @@ public class CommandDataParser {
                 result.add("id", parseID());
                 result.add("ticket", parseTicket());
                 break;
-            case "show", "help", "exit", "average_of_price", "info", "clear", "conninfo":
+            case "show", "help", "exit", "average_of_price", "info", "clear", "conninfo", "userinfo":
                 break;
             default:
                 throw new IllegalArgumentException("Command '" + command + "' not found.");

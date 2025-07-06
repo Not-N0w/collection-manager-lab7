@@ -1,6 +1,7 @@
 package com.labs.server.commands;
 
 import com.labs.common.Command;
+import com.labs.common.DataContainer;
 import com.labs.server.CollectionManager;
 
 public class AverageOfPriceCommand implements Command {
@@ -10,7 +11,7 @@ public class AverageOfPriceCommand implements Command {
         this.collectionManager = collectionManager;
     }
 
-    public Object execute() {
+    public DataContainer execute() {
         return collectionManager.averageOfPrice();
     }
 

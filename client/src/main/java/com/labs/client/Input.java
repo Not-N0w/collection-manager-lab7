@@ -6,6 +6,8 @@ import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 import com.labs.common.DataContainer;
+import com.labs.common.user.User;
+import com.labs.common.SHAConverter;
 
 /**
  * Класс, реализующий получение пользовательских данных и их первичной обработки
@@ -25,7 +27,6 @@ public class Input {
      * Поле с классом, отвечающим за вывод данных.
     */
     private Output output;
-
     /**
      * Конструктор создание нового объекта.
      * 
@@ -47,7 +48,6 @@ public class Input {
      */
     public Input(Output output, String filePath) {
         this.output = output;
-        this.output = output;
         scannerInit(filePath);
         commandDataParser = new CommandDataParser(scanner, output);
     }
@@ -60,7 +60,10 @@ public class Input {
     public boolean checkScanner() {
         return (scanner == null ? false : true);
     }
-
+    public static boolean checkSource(String filePath) {
+        var file =  new File(filePath.strip());
+        return file.exists();
+    }
     /**
      * Метод пытающийся инициализировать сканнер
      * 
@@ -143,4 +146,22 @@ public class Input {
         return null;
     }
 
+    public User autorizeUser() {
+        output.outHeadDelimetr("Autorization");
+        output.out("Login -> ");
+        String login = scanner.next();
+        output.out("Password -> ");
+        String password = scanner.next();
+        output.outDelimetr();
+
+        return new User(login, password);
+    }
+
+    public boolean wantNewUser() {
+        output.out("No such user\n");
+        output.out("Do you want to add new user? (Y/N) -> ");
+        String addUser = scanner.next();
+        if (addUser.charAt(0) == 'Y') { return true; }
+        return false;
+    }
 }

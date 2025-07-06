@@ -3,17 +3,20 @@ package com.labs.client;
 import com.labs.common.DataContainer;
 import com.labs.common.dataConverter.Deserializer;
 import com.labs.common.dataConverter.Serializer;
+import com.labs.common.user.User;
 
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.InetSocketAddress;
+import java.net.Socket;
 import java.net.SocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
 
 public class Transmitter {
 
-    private SocketAddress socketAddress;
-    private SocketChannel socketChannel;
+    private InetAddress socketAddress;
+    private Socket socket;
     private final Serializer serializer;
 
     public Transmitter() {
@@ -21,22 +24,26 @@ public class Transmitter {
     }
 
 
-    DataContainer connectionCheck() {
-        if (socketChannel == null || !socketChannel.isConnected()) {
-            var response = connect();
+    public DataContainer connectionCheck() {
+        DataContainer response = new DataContainer();
+        if (socket == null || !socket.isConnected()) {
+            response = connect();
             response.add("message", "Reconnection: " + response.get("message"));
             return response;
         }
-        return null;
+        response.add("status", "ok");
+        response.add("message", "Already connected to server");
+        return response;
     }
 
-    DataContainer connect() {
+    public DataContainer connect() {
         DataContainer response = new DataContainer();
+        int port = -1;
+        String host = "";
         try {
-            this.socketAddress = new InetSocketAddress(
-                    System.getenv("TO_HOST"),
-                    Integer.parseInt(System.getenv("TO_PORT"))
-            );
+            host = System.getenv("TO_HOST");
+            port = Integer.parseInt(System.getenv("TO_PORT"));
+            if(host.equals("") || port == -1) throw new Exception();
         }
         catch (Exception e) {
             response.add("from", "CLIENT");
@@ -46,8 +53,7 @@ public class Transmitter {
         }
         response.add("from", "SERVER");
         try {
-            socketChannel = SocketChannel.open();
-            socketChannel.connect(socketAddress);
+            socket = new Socket(host, port);
         } catch (Exception e) {
             response.add("status", "error");
             response.add("message", "Connect failed");
@@ -62,30 +68,35 @@ public class Transmitter {
         DataContainer response = new DataContainer();
         response.add("from", "CLIENT");
 
-
-        ByteBuffer buffer;
-
         try {
-            ByteBuffer dataLength = ByteBuffer.allocate(4);
-            while (dataLength.hasRemaining()) {
-                int bytesRead = socketChannel.read(dataLength);
-                if (bytesRead == -1) {
-                    throw new IOException("Server closed connection");
-                }
-            }
-            dataLength.flip();
-            int length = dataLength.getInt();
+            var inputStream = socket.getInputStream();
+            byte[] sizeBuffer = new byte[4];
 
-            buffer = ByteBuffer.allocate(length);
-            while (buffer.hasRemaining()) {
-                int bytesRead = socketChannel.read(buffer);
+            int totalRead = 0;
+            while (totalRead < 4) {
+                int bytesRead = inputStream.read(sizeBuffer, totalRead, 4 - totalRead);
                 if (bytesRead == -1) {
-                    throw new IOException("Server closed connection");
+                    throw new IOException("Stream closed before reading message size");
                 }
+                totalRead += bytesRead;
             }
 
-            DataContainer data = Deserializer.deserialize(buffer.array());
+            ByteBuffer sizeByteBuffer = ByteBuffer.wrap(sizeBuffer);
+            int objSize = sizeByteBuffer.getInt();
 
+            byte[] objBytes = new byte[objSize];
+
+            totalRead = 0;
+            while (totalRead < objSize) {
+                int bytesRead = inputStream.read(objBytes, totalRead, objSize - totalRead);
+                if (bytesRead == -1) {
+                    throw new IOException("Stream closed before reading message size");
+                }
+                totalRead += bytesRead;
+            }
+
+
+            DataContainer data = Deserializer.deserialize(objBytes);
             return data;
 
         } catch (IOException e) {
@@ -99,10 +110,16 @@ public class Transmitter {
         }
     }
 
-    DataContainer send(DataContainer data) {
+    public DataContainer send(DataContainer data, User user) {
         DataContainer response = new DataContainer();
         response.add("from", "CLIENT");
 
+        if(data.get("type").equals("verify-user") || data.get("type").equals("user-add")) {
+            data.add("User", user);
+        }
+        else {
+            data.add("User-id", user.getId());
+        }
         byte[] bytes;
         try {
             bytes = serializer.serialize(data);
@@ -119,9 +136,7 @@ public class Transmitter {
 
         try {
             buffer.flip();
-            while (buffer.hasRemaining()) {
-                socketChannel.write(buffer);
-            }
+            socket.getOutputStream().write(buffer.array());
         } catch (Exception e) {
             response.add("status", "error");
             response.add("message", "Error writing data");
@@ -133,24 +148,18 @@ public class Transmitter {
         return response;
     }
     public String connInfo() {
-            if (socketChannel == null) {
-                return "SocketChannel is not initialized.";
-            }
-
-            if (!socketChannel.isOpen()) {
-                return "Connection is closed.";
-            }
-
-            try {
-                if (socketChannel.isConnected()) {
-                    return "Connection is established with " + socketChannel.getRemoteAddress();
-                } else if (socketChannel.isConnectionPending()) {
-                    return "Connection is in progress...";
-                } else {
-                    return "Connection is not established.";
-                }
-            } catch (IOException e) {
-                return "Error retrieving connection status: " + e.getMessage();
-            }
+        if (socket == null) {
+            return "SocketChannel is not initialized.";
         }
+
+        if (socket.isClosed()) {
+            return "Connection is closed.";
+        }
+        if (socket.isConnected()) {
+            return "Connection is established with " + socket.getInetAddress().getHostAddress();
+        }
+        else {
+            return "Connection is not established.";
+        }
+    }
 }

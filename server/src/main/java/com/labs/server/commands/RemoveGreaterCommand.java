@@ -3,6 +3,7 @@ package com.labs.server.commands;
 import java.util.Map;
 
 import com.labs.common.Command;
+import com.labs.common.DataContainer;
 import com.labs.common.core.Ticket;
 import com.labs.common.exceptions.KeyNotFoundException;
 import com.labs.server.CollectionManager;
@@ -15,9 +16,8 @@ public class RemoveGreaterCommand implements Command {
         this.collectionManager = collectionManager;
     }
 
-    public Object execute() {
-        collectionManager.removeGreater(ticket);
-        return null;
+    public DataContainer execute() {
+        return collectionManager.removeGreater(ticket);
     }
 
     public void setArguments(Map<String, Object> data) throws KeyNotFoundException {

@@ -21,7 +21,7 @@ public abstract class AbstractInvoker {
      * Вызов команды и ее верхнеуровневая обработка
      * @param data содержит команду и ее парраметры
      */
-    public void run(DataContainer data) {
+    public synchronized void run(DataContainer data) {
         String commandStr = data.getCommand();
         response = new DataContainer(commandStr);
         Command currentCommand = commands.get(commandStr);

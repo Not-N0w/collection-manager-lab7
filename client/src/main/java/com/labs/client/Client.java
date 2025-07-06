@@ -1,6 +1,7 @@
 package com.labs.client;
 
 import com.labs.common.DataContainer;
+import com.labs.common.user.User;
 
 
 /**
@@ -11,12 +12,12 @@ public class Client {
      * Поле с классом, отвечающим за получение данных от пользователя.
     */
     private Input input;
-    
+    User user;
     /**
      * Поле с классом, отвечающим за вывод данных.
     */
     private Output output;
-
+    private UserManager userManager;
 
     /**
      * Поле с классом, отвечающим за обработку данных.
@@ -31,11 +32,13 @@ public class Client {
 
     public Client() {
         output = new Output();
-        input = new Input(output);
         transmitter = new Transmitter();
         dataManager = new DataManager(output, transmitter);
-        cycle = new Cycle(input,output,dataManager, false);
+        input = new Input(output);
+        userManager = new UserManager(input, dataManager, transmitter, output);
+        cycle = new Cycle(input,output,dataManager, false, userManager);
     }
+
 
 
     /**
@@ -45,6 +48,9 @@ public class Client {
     public void run() {
         DataContainer response = transmitter.connect();
         output.responseOut(response);
+
+        userManager.authenticateUser();
+
         cycle.cycle();
     }
 
@@ -53,3 +59,4 @@ public class Client {
         client.run();
     }
 }
+

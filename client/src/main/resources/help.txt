@@ -1,16 +1,21 @@
-help : вывести справку по доступным командам
-info : вывести в стандартный поток вывода информацию о коллекции (тип, дата инициализации, количество элементов и т.д.)
-show : вывести в стандартный поток вывода все элементы коллекции в строковом представлении
-add {element} : добавить новый элемент в коллекцию
-update id {element} : обновить значение элемента коллекции, id которого равен заданному
-remove_by_id id : удалить элемент из коллекции по его id
-clear : очистить коллекцию
-save : сохранить коллекцию в файл
-execute_script [-s] file_name : считать и исполнить скрипт из указанного файла. В скрипте содержатся команды в таком же виде, в котором их вводит пользователь в интерактивном режиме.
-exit : завершить программу (без сохранения в файл)
-add_if_max {element} : добавить новый элемент в коллекцию, если его значение превышает значение наибольшего элемента этой коллекции
-add_if_min {element} : добавить новый элемент в коллекцию, если его значение меньше, чем у наименьшего элемента этой коллекции
-remove_greater {element} : удалить из коллекции все элементы, превышающие заданный
-average_of_price : вывести среднее значение поля price для всех элементов коллекции
-count_greater_than_refundable refundable : вывести количество элементов, значение поля refundable которых больше заданного
-filter_greater_than_refundable refundable : вывести элем    енты, значение поля refundable которых больше заданного
++----------------------------------------------+---------------------------------------------------------------------------------------------+
+| Command                                      | Description                                                                                 |
++----------------------------------------------+---------------------------------------------------------------------------------------------+
+| help                                         | Display help information about available commands.                                          |
+| info                                         | Display information about the collection (type, initialization date, number of elements).  |
+| show                                         | Display all elements of the collection in string representation.                            |
+| add {element}                                | Add a new element to the collection.                                                        |
+| update id {element}                          | Update the element in the collection whose id is equal to the given one.                    |
+| remove_by_id id                              | Remove an element from the collection by its id.                                            |
+| clear                                        | Clear the collection.                                                                       |
+| save                                         | Save the collection to a file.                                                              |
+| execute_script [-s] file_name                | Read and execute a script from the specified file. The script contains commands             |
+|                                              | in the same format as in interactive mode.                                                  |
+| exit                                         | Terminate the program (without saving to file).                                             |
+| add_if_max {element}                         | Add a new element to the collection if its value is greater than the current maximum.       |
+| add_if_min {element}                         | Add a new element to the collection if its value is less than the current minimum.          |
+| remove_greater {element}                     | Remove all elements from the collection greater than the specified one.                     |
+| average_of_price                             | Output the average value of the `price` field among all elements.                           |
+| count_greater_than_refundable refundable     | Output the number of elements whose `refundable` field value is greater than the given one. |
+| filter_greater_than_refundable refundable    | Display elements whose `refundable` field value is greater than the given one.              |
++----------------------------------------------+---------------------------------------------------------------------------------------------+

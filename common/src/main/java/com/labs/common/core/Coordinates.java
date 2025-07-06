@@ -17,7 +17,7 @@ public class Coordinates implements Serializable, Settable,  Comparable<Coordina
      * Нижний предел для Y
      */
     private final float yLimit = -69;
-
+    private int id;
     private int x; // Значение поля должно быть больше -47
     private float y; // Значение поля должно быть больше -69
 
@@ -82,6 +82,16 @@ public class Coordinates implements Serializable, Settable,  Comparable<Coordina
         this.y = y;
     }
 
+
+
+    public int getX() {
+        return x;
+    }
+
+    public float getY() {
+        return y;
+    }
+
     @Override
     public <T> void set(String fieldName, T in) throws IllegalArgumentException {
         switch (fieldName) {
@@ -102,6 +112,14 @@ public class Coordinates implements Serializable, Settable,  Comparable<Coordina
         if (result != 0) return result;
 
         return Float.compare(this.y, other.y);
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public int getId() {
+        return id;
     }
 
     @Override

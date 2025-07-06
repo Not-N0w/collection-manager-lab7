@@ -1,18 +1,4 @@
 services:
-  client:
-    build:
-      context: .
-      dockerfile: docker/Dockerfile.client
-    container_name: client-container
-    stdin_open: true
-    tty: true
-    environment:
-      - TO_HOST=server
-      - TO_PORT=1804
-    depends_on:
-      server:
-        condition: service_healthy
-
   server:
     build:
       context: .
@@ -20,13 +6,28 @@ services:
     container_name: server-container
     ports:
       - "1804:1804"
+    environment:
+      NAME_DB: "ticketControllerDB"
+      USER_DB: "postgres_admin"
+      PASSWORD_DB: "postgres"
+      HOST_DB: "postgres"
     healthcheck:
       test: [ "CMD", "pgrep", "java" ]
       interval: 10s
       retries: 3
     tty: true
+
+
+  postgres:
+    image: postgres
+    environment:
+      POSTGRES_DB: "ticketControllerDB"
+      POSTGRES_USER: "postgres_admin"
+      POSTGRES_PASSWORD: "postgres"
     volumes:
-      - saved_data:/server/saved_dir
+    -   ./docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
+    ports:
+      - "5432:5432"
 
 volumes:
   saved_data:
