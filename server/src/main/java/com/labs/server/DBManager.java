@@ -461,7 +461,3 @@ public class DBManager {
     }
 
 }
-
-
-// NAME_DB=studs USER_DB=s466595 PASSWORD_DB=jqhu47tcgQQ6xWkZ HOST_DB=localhost java -jar server.jar
-// ssh -L 5432:localhost:5432 s466595@se.ifmo.ru
